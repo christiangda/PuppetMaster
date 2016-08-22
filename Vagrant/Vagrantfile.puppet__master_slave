@@ -1,0 +1,83 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  # Vagrant box flavor and repo
+  config.vm.box = "ubuntu/trusty64"
+  config.vm.box_url = "https://vagrantcloud.com/ubuntu/boxes/trusty64"
+
+  # General provision scripts
+  config.vm.provision "shell", path: "./scripts/bootstrap.sh"
+
+  ###################################################################################
+  # PUPETMASTER CONFIG
+  ###################################################################################
+  config.vm.define "master" do |master|
+    master.vm.hostname =  "master.puppet.local"
+    master.vm.network "private_network", ip: "192.168.33.100"
+
+    # Map internal ports services
+    # puppetmaster dashboard
+    #master.vm.network "forwarded_port", guest: 8080, host: 18080, host_ip: '127.0.0.1', auto_correct: true
+    # CouchDB web interface
+    #master.vm.network "forwarded_port", guest: 5984, host: 15984, host_ip: '127.0.0.1', auto_correct: true
+
+    master.vm.synced_folder "../", "/etc/puppet/environments/production"
+    #master.vm.synced_folder "../manifests", "/etc/puppet/manifests"
+    #master.vm.synced_folder "../modules", "/etc/puppet/modules"
+    #master.vm.synced_folder "../hieradata", "/etc/puppet/hieradata"
+
+    master.vm.provider "virtualbox" do |v|
+      v.name    = "master.puppet.local"
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+      v.memory = "1024"
+      #v.cpus = 2
+    end
+
+    # Puppet master provision script
+    master.vm.provision "shell", path: "./scripts/vagrant-master.sh"
+    master.vm.provision "shell", path: "./scripts/vagrant-master_enable_node_agent.sh"
+  end
+
+  ###################################################################################
+  # AGENT CONFIG
+  ###################################################################################
+  config.vm.define "agent01" do |agent|
+    agent.vm.hostname =  "agent01.puppet.local"
+    agent.vm.network "private_network", ip: "192.168.33.101"
+
+    agent.vm.provider "virtualbox" do |v|
+      v.name    = "#{agent.vm.hostname}"
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+      v.memory = "4096"
+    end
+
+    # Puppet agent provision script
+    agent.vm.provision "shell" do |s|
+      s.path = "./scripts/vagrant-agent.sh"
+      s.args = "#{agent.vm.hostname}"
+    end
+  end
+
+  config.vm.define "agent02" do |agent|
+    agent.vm.hostname =  "agent02.puppet.local"
+    agent.vm.network "private_network", ip: "192.168.33.102"
+
+    agent.vm.provider "virtualbox" do |v|
+      v.name    = "#{agent.vm.hostname}"
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+      v.memory = "1024"
+    end
+
+    # Puppet agent provision script
+    agent.vm.provision "shell" do |s|
+      s.path = "./scripts/vagrant-agent.sh"
+      s.args = "#{agent.vm.hostname}"
+    end
+  end
+
+end
