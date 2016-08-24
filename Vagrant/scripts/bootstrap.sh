@@ -3,7 +3,7 @@
 # Prepare the system
 yum -y update
 yum -y install vim htop elinks
-rpm -Uvh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
+rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
 
 # Enter like root all time
 cat << __EOF__ >> /home/vagrant/.profile
