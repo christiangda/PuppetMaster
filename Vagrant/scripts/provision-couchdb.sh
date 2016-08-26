@@ -34,7 +34,8 @@ chkconfig --level 2345 couchdb on
 
 #
 ln -s /usr/local/etc/couchdb /etc/couchdb
-sed -i 's/bind_address = 127.0.0.1/bind_address = 0.0.0.0/g' /etc/couchdb/local.ini
+sed -i 's/bind_address = 127.0.0.1/bind_address = 0.0.0.0/g' /usr/local/etc/couchdb/default.ini
+sed -i 's/bind_address = 127.0.0.1/bind_address = 0.0.0.0/g' /usr/local/etc/couchdb/default.ini
 
 # start service
 service couchdb start
