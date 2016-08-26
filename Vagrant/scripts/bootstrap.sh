@@ -2,7 +2,7 @@
 
 # Prepare the system
 yum -y update
-yum -y install vim htop elinks
+yum -y install vim htop elinks mlocate
 rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
 
 # Enter like root all time
@@ -13,6 +13,8 @@ cat << __EOF__ >> /home/vagrant/.profile
 sudo su -
 __EOF__
 chown vagrant.vagrant /home/vagrant/.profile
+echo "" >> /home/vagrant/.bash_profile
+echo "source ~/.profile" >> /home/vagrant/.bash_profile
 
 # Set hostname file (replaced)
 cat << __EOF__ > /etc/hosts
