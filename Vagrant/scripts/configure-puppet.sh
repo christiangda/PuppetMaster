@@ -39,7 +39,7 @@ __EOF__
 ################################################################################
 # fileserver.conf
 #
-cp $FILESERVER_CONF $FILESERVER_CONF.bkup
+#cp $FILESERVER_CONF $FILESERVER_CONF.bkup
 cat << __EOF__ > $FILESERVER_CONF
 [plugins]
   allow *
@@ -51,7 +51,7 @@ __EOF__
 ################################################################################
 # autosign.conf
 #
-cp $AUTOSIGN_CONF $AUTOSIGN_CONF.bkup
+#cp $AUTOSIGN_CONF $AUTOSIGN_CONF.bkup
 cat << __EOF__ > $AUTOSIGN_CONF
 *.local
 __EOF__
@@ -59,7 +59,7 @@ __EOF__
 ################################################################################
 # routes.yaml
 #
-cp $ROUTES_CONF $ROUTES_CONF.bkup
+#cp $ROUTES_CONF $ROUTES_CONF.bkup
 cat << __EOF__ > $ROUTES_CONF
 ---
 master:
