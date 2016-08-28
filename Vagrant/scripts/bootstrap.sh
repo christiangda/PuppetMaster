@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Prepare the system
+yum -y install deltarpm
 yum -y update
 yum -y install vim htop elinks mlocate
 rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
