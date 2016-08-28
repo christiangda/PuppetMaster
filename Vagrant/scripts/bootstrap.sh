@@ -1,11 +1,18 @@
 #!/bin/bash
 
+################################################################################
 # Prepare the system
 yum -y install deltarpm
 yum -y update
-yum -y install vim htop elinks mlocate
+yum -y install vim htop elinks mlocate nmap telnet
 rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
 
+################################################################################
+# Disable selinux
+sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config
+setenforce 0
+
+################################################################################
 # Enter like root all time
 cat << __EOF__ >> /home/vagrant/.profile
 #
@@ -17,6 +24,7 @@ chown vagrant.vagrant /home/vagrant/.profile
 echo "" >> /home/vagrant/.bash_profile
 echo "source ~/.profile" >> /home/vagrant/.bash_profile
 
+################################################################################
 # Set hostname file (replaced)
 cat << __EOF__ > /etc/hosts
 # MANAGED BY boostrap.sh script in Vagrant
@@ -26,6 +34,7 @@ cat << __EOF__ > /etc/hosts
 192.168.33.102    agent-02.puppet.local agent-02
 __EOF__
 
+################################################################################
 # Set hostname file (add lines)
 cat << __EOF__ >> /etc/resolv.conf
 # MANAGED BY boostrap.sh script in Vagrant

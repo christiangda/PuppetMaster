@@ -3,6 +3,7 @@
 ################################################################################
 # Global VARs
 PUPPET_CONF=/etc/puppetlabs/puppet/puppet.conf
+PUPPETDB_CONF=/etc/puppetlabs/puppet/puppetdb.conf
 FILESERVER_CONF=/etc/puppetlabs/puppet/fileserver.conf
 AUTOSIGN_CONF=/etc/puppetlabs/puppet/autosign.conf
 ROUTES_CONF=/etc/puppetlabs/puppet/routes.yaml
@@ -10,8 +11,6 @@ HIERA_CONF=/etc/puppetlabs/puppet/hiera.yaml
 
 ################################################################################
 # file: puppet.conf
-#
-cp $PUPPET_CONF $PUPPET_CONF.bkup
 cat << __EOF__ > $PUPPET_CONF
 [main]
 vardir = /opt/puppetlabs/server/data/puppetserver
@@ -32,15 +31,22 @@ strict_hostname_checking = true
 strict_variables = true
 
 [master]
-reports = puppetdb
+dns_alt_names = master.puppet.local, master
+reports = store,puppetdb
 storeconfigs_backend = puppetdb
 storeconfigs = true
 environment_timeout = unlimited
 __EOF__
 
 ################################################################################
+# file: puppetdb.conf
+cat << __EOF__ > $PUPPET_CONF
+[main]
+server_urls = https://master.puppet.local:8081
+__EOF__
+
+################################################################################
 # file: fileserver.conf
-#
 cat << __EOF__ > $FILESERVER_CONF
 [plugins]
   allow *
@@ -50,17 +56,13 @@ cat << __EOF__ > $FILESERVER_CONF
 __EOF__
 
 ################################################################################
-# autosign.conf
-#
-#cp $AUTOSIGN_CONF $AUTOSIGN_CONF.bkup
+# file: autosign.conf
 cat << __EOF__ > $AUTOSIGN_CONF
 *.local
 __EOF__
 
 ################################################################################
-# routes.yaml
-#
-#cp $ROUTES_CONF $ROUTES_CONF.bkup
+# file: routes.yaml
 cat << __EOF__ > $ROUTES_CONF
 ---
 master:
@@ -70,9 +72,7 @@ master:
 __EOF__
 
 ################################################################################
-# hiera.yaml
-#
-cp $HIERA_CONF $HIERA_CONF.bkup
+# file: hiera.yaml
 cat << __EOF__ > $HIERA_CONF
 ---
 :backends:
@@ -112,4 +112,7 @@ cat << __EOF__ > $HIERA_CONF
 
 :logger: console
 
+################################################################################
+# Set permmision
+chown -R puppet:puppet `puppet config print confdir`
 __EOF__

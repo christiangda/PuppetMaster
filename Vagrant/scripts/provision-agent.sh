@@ -29,4 +29,4 @@ systemctl stop puppet
 
 #BY PUPPET
 puppet agent --enable
-puppet agent -t --noop
+puppet agent --test --server master.puppet.local --environment production --noop
