@@ -57,5 +57,9 @@ curl -X PUT http://127.0.0.1:5984/hieradata
 # Put location fact document in location database
 curl -X PUT http://127.0.0.1:5984/hieradata/common -d '{}'
 curl -X PUT http://127.0.0.1:5984/hieradata/location -d '{}'
+curl -X PUT http://127.0.0.1:5984/hieradata/location/vagrant -d '{}'
 curl -X PUT http://127.0.0.1:5984/hieradata/vagrant -d '{}'
+curl -X PUT http://127.0.0.1:5984/hieradata/vagrant/production -d '{}'
+curl -X PUT http://127.0.0.1:5984/hieradata/vagrant/preproduction -d '{}'
+curl -X PUT http://127.0.0.1:5984/hieradata/vagrant/common -d '{}'
 curl -X PUT http://127.0.0.1:5984/hieradata/nodes -d '{}'

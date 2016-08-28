@@ -96,7 +96,7 @@ cat << __EOF__ > $HIERA_CONF
 :http:
   :host: 127.0.0.1
   :port: 5984
-  :use_auth: true
+  :use_auth: false
   :auth_user: admin
   :auth_pass: admin
   :output: json
