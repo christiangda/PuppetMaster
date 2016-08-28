@@ -1,13 +1,15 @@
 #!/bin/bash
+
+################################################################################
+# Global VARs
 PUPPET_CONF=/etc/puppetlabs/puppet/puppet.conf
 FILESERVER_CONF=/etc/puppetlabs/puppet/fileserver.conf
 AUTOSIGN_CONF=/etc/puppetlabs/puppet/autosign.conf
 ROUTES_CONF=/etc/puppetlabs/puppet/routes.yaml
 HIERA_CONF=/etc/puppetlabs/puppet/hiera.yaml
 
-
 ################################################################################
-# puppet.conf
+# file: puppet.conf
 #
 cp $PUPPET_CONF $PUPPET_CONF.bkup
 cat << __EOF__ > $PUPPET_CONF
@@ -37,9 +39,8 @@ environment_timeout = unlimited
 __EOF__
 
 ################################################################################
-# fileserver.conf
+# file: fileserver.conf
 #
-#cp $FILESERVER_CONF $FILESERVER_CONF.bkup
 cat << __EOF__ > $FILESERVER_CONF
 [plugins]
   allow *

@@ -1,6 +1,7 @@
 #!/bin/bash
 yum -y install epel-release
-yum -y install autoconf autoconf-archive automake curl-devel erlang gcc-c++ help2man js-devel libicu-devel libtool perl-Test-Harness unzip zip
+yum -y install autoconf autoconf-archive automake curl-devel erlang gcc-c++
+yum -y install help2man js-devel libicu-devel libtool perl-Test-Harness unzip zip
 yum -y install python-devel python-setuptools python-pip wget gem
 
 # Install dependencies
@@ -23,6 +24,10 @@ cd apache-couchdb-1.6.1
 ./configure --with-erlang=/usr/lib64/erlang/usr/include/
 make && sudo make install
 
+# Install package to manage couchdb as hiera repo data
+gem install hiera-http
+gem install deep_merge
+
 #
 useradd --no-create-home couchdb
 chown -R couchdb:couchdb /usr/local/{lib,etc}/couchdb /usr/local/var/{lib,log,run}/couchdb
@@ -34,7 +39,6 @@ chkconfig --level 2345 couchdb on
 
 #
 ln -s /usr/local/etc/couchdb /etc/couchdb
-sed -i 's/bind_address = 127.0.0.1/bind_address = 0.0.0.0/g' /usr/local/etc/couchdb/default.ini
 sed -i 's/bind_address = 127.0.0.1/bind_address = 0.0.0.0/g' /usr/local/etc/couchdb/default.ini
 
 # start service
@@ -55,6 +59,3 @@ curl -X PUT http://127.0.0.1:5984/hieradata/common -d '{}'
 curl -X PUT http://127.0.0.1:5984/hieradata/location -d '{}'
 curl -X PUT http://127.0.0.1:5984/hieradata/vagrant -d '{}'
 curl -X PUT http://127.0.0.1:5984/hieradata/nodes -d '{}'
-
-gem install hiera-http
-gem install deep_merge

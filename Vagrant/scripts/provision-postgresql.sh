@@ -31,7 +31,6 @@ rm -rf /tmp/config-postgresql-initdb.sh
 # Start PostgreSQL after initdb
 systemctl start postgresql-9.5.service
 
-
 # this code will be executed as a postgresql user
 cat << __EOF__ | tee -a /tmp/config-postgresql-createdb.sh
 psql -c "CREATE ROLE puppetdb WITH NOCREATEDB NOCREATEROLE NOSUPERUSER LOGIN PASSWORD 'puppetdbpwd';"

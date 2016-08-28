@@ -32,7 +32,6 @@ store-usage = 102400
 
 # Maximum amount of disk space (in MB) to allow for ActiveMQ temporary message storage
 temp-usage = 51200
-
 __EOF__
 
 ##
