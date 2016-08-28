@@ -20,13 +20,13 @@ systemctl enable puppetserver.service
 systemctl start puppetserver.service
 
 # Require modules
-puppet module install puppetlabs-stdlib
-puppet module install puppetlabs-registry
-puppet module install puppetlabs-motd
-puppet module install puppetlabs-inifile
-puppet module install puppetlabs-postgresql
-puppet module install puppetlabs-apt
-puppet module install puppetlabs-concat
-puppet module install puppetlabs-puppetdb
-puppet module install puppetlabs-ntp
-puppet module install puppetlabs-java
+# puppet module install puppetlabs-stdlib
+# puppet module install puppetlabs-registry
+# puppet module install puppetlabs-motd
+# puppet module install puppetlabs-inifile
+# puppet module install puppetlabs-postgresql
+# puppet module install puppetlabs-apt
+# puppet module install puppetlabs-concat
+# puppet module install puppetlabs-puppetdb
+# puppet module install puppetlabs-ntp
+# puppet module install puppetlabs-java
