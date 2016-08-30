@@ -24,6 +24,7 @@ server = master.puppet.local
 dns_alt_names = master,master.puppet.local
 environment = production
 runinterval = 1h
+pluginsync=true
 
 report=true
 strict_environment_mode = true
@@ -31,6 +32,7 @@ strict_hostname_checking = true
 strict_variables = true
 
 [master]
+server = master.puppet.local
 dns_alt_names = master.puppet.local, master
 reports = store,puppetdb
 storeconfigs_backend = puppetdb
