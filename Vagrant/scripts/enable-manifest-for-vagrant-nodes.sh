@@ -24,13 +24,17 @@ cat << __EOF__ > $VAGRANT_MANIFEST
 node 'agent-01.puppet.local' {
   ##############################################################################
   # your code here
-  include motd
+  class { 'motd':
+    content => "Hellow to Puppet 4 development environment/n",
+  }
 }
 
 node 'agent-02.puppet.local' {
   ##############################################################################
   # your code here
-  include motd
+  class { 'motd':
+    content => "Hellow to Puppet 4 development environment/n",
+  }
 }
 __EOF__
 fi

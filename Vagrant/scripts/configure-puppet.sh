@@ -40,7 +40,7 @@ __EOF__
 
 ################################################################################
 # file: puppetdb.conf
-cat << __EOF__ > $PUPPET_CONF
+cat << __EOF__ > $PUPPETDB_CONF
 [main]
 server_urls = https://master.puppet.local:8081
 __EOF__
@@ -112,7 +112,8 @@ cat << __EOF__ > $HIERA_CONF
 
 :logger: console
 
+__EOF__
+
 ################################################################################
 # Set permmision
 chown -R puppet:puppet `puppet config print confdir`
-__EOF__
