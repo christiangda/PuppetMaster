@@ -115,5 +115,12 @@ cat << __EOF__ > $HIERA_CONF
 __EOF__
 
 ################################################################################
+# Install package to manage couchdb as hiera repo data
+################################################################################
+# Install package to manage couchdb as hiera repo data
+/opt/puppetlabs/puppet/bin/gem install hiera-http
+/opt/puppetlabs/puppet/bin/gem install deep_merge
+
+################################################################################
 # Set permmision
 chown -R puppet:puppet `puppet config print confdir`

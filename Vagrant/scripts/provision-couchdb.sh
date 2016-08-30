@@ -31,11 +31,6 @@ cd apache-couchdb-1.6.1
 make && sudo make install
 
 ################################################################################
-# Install package to manage couchdb as hiera repo data
-gem install hiera-http
-gem install deep_merge
-
-################################################################################
 # Create user
 useradd --no-create-home couchdb
 chown -R couchdb:couchdb /usr/local/{lib,etc}/couchdb /usr/local/var/{lib,log,run}/couchdb
