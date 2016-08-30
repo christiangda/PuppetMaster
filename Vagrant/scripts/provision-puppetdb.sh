@@ -75,19 +75,19 @@ port = 8080
 # IP address to listen on for HTTPS connections. Hostnames can also be used
 # but are not recommended to avoid DNS resolution issues. To listen on all
 # interfaces, use `0.0.0.0`.
-ssl-host = 0.0.0.0
+#ssl-host = 0.0.0.0
 
 # The port to listen on for HTTPS connections
-ssl-port = 8081
+#ssl-port = 8081
 
 # Private key path
-ssl-key = /etc/puppetlabs/puppetdb/ssl/private.pem
+#ssl-key = /etc/puppetlabs/puppetdb/ssl/private.pem
 
 # Public certificate path
-ssl-cert = /etc/puppetlabs/puppetdb/ssl/public.pem
+#ssl-cert = /etc/puppetlabs/puppetdb/ssl/public.pem
 
 # Certificate authority path
-ssl-ca-cert = /etc/puppetlabs/puppetdb/ssl/ca.pem
+#ssl-ca-cert = /etc/puppetlabs/puppetdb/ssl/ca.pem
 
 # Access logging configuration path. To turn off access logging
 # comment out the line with `access-log-config=...`
@@ -96,7 +96,7 @@ __EOF__
 
 ################################################################################
 # Prepare SSL
-/opt/puppetlabs/server/apps/puppetdb/cli/apps/ssl-setup
+#/opt/puppetlabs/server/apps/puppetdb/cli/apps/ssl-setup
 
 ################################################################################
 # Setup service
