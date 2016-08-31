@@ -2,6 +2,7 @@
 
 ################################################################################
 # Prepare the system
+yum -y install kernel-devel kernel-headers dkms
 yum -y install deltarpm
 yum -y update
 yum -y install vim htop elinks mlocate nmap telnet

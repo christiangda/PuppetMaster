@@ -1,8 +1,7 @@
 #!/bin/bash
 
 ################################################################################
-# Install requirements
-yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) dkms
+# build kernel module
 /opt/VBoxGuestAdditions-5.0.24/init/vboxadd setup
 
 ################################################################################

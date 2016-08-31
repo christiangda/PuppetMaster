@@ -120,6 +120,9 @@ __EOF__
 /opt/puppetlabs/puppet/bin/gem install hiera-http
 /opt/puppetlabs/puppet/bin/gem install deep_merge
 
+/opt/puppetlabs/server/bin/puppetserver gem install hiera-http
+/opt/puppetlabs/server/bin/puppetserver gem install deep_merge
+
 ln -s /opt/puppetlabs/puppet/lib/ruby/gems/2.1.0/gems/hiera-http-2.0.0/lib/hiera/backend/http_backend.rb /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/hiera/backend/http_backend.rb
 
 ################################################################################
