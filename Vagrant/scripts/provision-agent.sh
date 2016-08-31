@@ -37,3 +37,9 @@ echo '{ "node_group": "vagrant", "node_environment": "vagrant", "location": "vag
 #
 puppet agent --enable
 puppet agent --test --server master.puppet.local --environment production --noop
+
+################################################################################
+#
+puppet config set server master.puppet.local --section main
+puppet config set dns_alt_names master.puppet.local,master --section main
+puppet config set environment production --section main
