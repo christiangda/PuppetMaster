@@ -24,7 +24,6 @@ server = master.puppet.local
 dns_alt_names = master,master.puppet.local
 environment = production
 runinterval = 1h
-pluginsync=true
 
 report=true
 strict_environment_mode = true
@@ -118,11 +117,19 @@ __EOF__
 
 ################################################################################
 # Install package to manage couchdb as hiera repo data
-################################################################################
-# Install package to manage couchdb as hiera repo data
 /opt/puppetlabs/puppet/bin/gem install hiera-http
 /opt/puppetlabs/puppet/bin/gem install deep_merge
+
+ln -s /opt/puppetlabs/puppet/lib/ruby/gems/2.1.0/gems/hiera-http-2.0.0/lib/hiera/backend/http_backend.rb /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/hiera/backend/http_backend.rb
 
 ################################################################################
 # Set permmision
 chown -R puppet:puppet `puppet config print confdir`
+
+################################################################################
+# Restart service after config
+systemctl stop puppetserver.service
+systemctl stop puppetdb.service
+
+systemctl start puppetdb.service
+systemctl start puppetserver.service
