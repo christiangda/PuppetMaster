@@ -53,4 +53,7 @@ cat << __EOF__ > /etc/puppetlabs/puppet/puppet.conf
 [main]
 server = master.puppet.local
 environment = production
+
+[agent]
+usecacheonfailure = false
 __EOF__

@@ -19,6 +19,7 @@ class profile::common::params {
         'mlocate',
         'nmap',
         'telnet',
+        'sysstat',
       ]
     }
     'Debian', 'Ubuntu': {
@@ -30,6 +31,7 @@ class profile::common::params {
         'mlocate',
         'nmap',
         'telnet',
+        'sysstat',
       ]
     }
     default: {

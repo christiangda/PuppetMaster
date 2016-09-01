@@ -37,6 +37,9 @@ reports = store,puppetdb
 storeconfigs_backend = puppetdb
 storeconfigs = true
 environment_timeout = unlimited
+
+[agent]
+usecacheonfailure = false
 __EOF__
 
 ################################################################################
