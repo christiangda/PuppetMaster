@@ -3,20 +3,19 @@
 
 Vagrant.configure("2") do |config|
 
-  # Vagrant box flavor and repo
-  #config.vm.box = "centos/7"
-  #config.vm.box_url = "https://atlas.hashicorp.com/centos/boxes/7"
-  config.vm.box = "geerlingguy/centos7"
-  config.vm.box_url = "https://atlas.hashicorp.com/geerlingguy/boxes/centos7"
-
   # General provision scripts
-  config.vm.provision "shell", path: "./scripts/bootstrap.sh"
   config.ssh.insert_key = false
 
   ##############################################################################
   # PUPETMASTER CONFIG
   #
   config.vm.define "master" do |master|
+    # Vagrant box flavor and repo
+    #master.vm.box = "centos/7"
+    #master.vm.box_url = "https://atlas.hashicorp.com/centos/boxes/7"
+    master.vm.box = "geerlingguy/centos7"
+    master.vm.box_url = "https://atlas.hashicorp.com/geerlingguy/boxes/centos7"
+
     master.vm.hostname =  "master.puppet.local"
     master.vm.network "private_network", ip: "192.168.33.100"
 
@@ -40,6 +39,7 @@ Vagrant.configure("2") do |config|
     end
 
     # Puppet master provision script
+    master.vm.provision "shell", path: "./scripts/bootstrap-redhat-family.sh"
     master.vm.provision "shell", path: "./scripts/provision-postgresql.sh"
     master.vm.provision "shell", path: "./scripts/provision-couchdb.sh"
     master.vm.provision "shell", path: "./scripts/provision-puppetserver.sh"
@@ -52,11 +52,15 @@ Vagrant.configure("2") do |config|
 
   ##############################################################################
   # AGENTS' CONFIG
-  config.vm.define "agent-01" do |agent|
-    agent.vm.hostname =  "agent-01.puppet.local"
-    agent.vm.network "private_network", ip: "192.168.33.101"
+  config.vm.define "agent-01" do |agent01|
+    # Vagrant box flavor and repo
+    agent01.vm.box = "geerlingguy/centos7"
+    agent01.vm.box_url = "https://atlas.hashicorp.com/geerlingguy/boxes/centos7"
 
-    agent.vm.provider "virtualbox" do |v|
+    agent01.vm.hostname =  "agent-01.puppet.local"
+    agent01.vm.network "private_network", ip: "192.168.33.101"
+
+    agent01.vm.provider "virtualbox" do |v|
       v.name    = "agent-01.puppet.local"
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
@@ -65,7 +69,30 @@ Vagrant.configure("2") do |config|
     end
 
     # Puppet agent provision script
-    agent.vm.provision "shell", path: "./scripts/provision-agent.sh"
-    agent.vm.provision "shell", path: "./scripts/provision-vbox-additions.sh"
+    agent01.vm.provision "shell", path: "./scripts/bootstrap-redhat-family.sh"
+    agent01.vm.provision "shell", path: "./scripts/provision-agent-redhat-family.sh"
+    agent01.vm.provision "shell", path: "./scripts/provision-vbox-additions.sh"
+  end
+
+  config.vm.define "agent-02" do |agent02|
+    # Vagrant box flavor and repo
+    agent02.vm.box = "ubuntu/trusty64"
+    agent02.vm.box_url = "https://atlas.hashicorp.com/ubuntu/boxes/trusty64"
+
+    agent02.vm.hostname =  "agent-02.puppet.local"
+    agent02.vm.network "private_network", ip: "192.168.33.102"
+
+    agent02.vm.provider "virtualbox" do |v|
+      v.name    = "agent-02.puppet.local"
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+      v.memory = "1024"
+      v.cpus = 1
+    end
+
+    # Puppet agent provision script
+    agent02.vm.provision "shell", path: "./scripts/bootstrap-debian-family.sh"
+    agent02.vm.provision "shell", path: "./scripts/provision-agent-debian-family.sh"
+    agent02.vm.provision "shell", path: "./scripts/provision-vbox-additions.sh"
   end
 end
