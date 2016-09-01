@@ -5,7 +5,7 @@
 yum -y install kernel-devel kernel-headers dkms
 yum -y install deltarpm
 yum -y update
-yum -y install vim htop elinks mlocate nmap telnet
+yum -y install vim-enhanced htop elinks mlocate nmap telnet
 rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
 
 ################################################################################

@@ -5,7 +5,7 @@ class profile::common::params {
   $default_timezone = 'Etc/UTC'
 
   # Default motd message
-  $default_motd_message = "You are connected to: $facter['fqdn']"
+  $default_motd_content = "You are connected to: {::fqdn}"
 
   # Values based in OS type
   case $::operatingsystem {
