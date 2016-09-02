@@ -81,21 +81,6 @@ cat << __EOF__ > $HIERA_CONF
 ---
 :backends:
   - http
-  - yaml
-  - json
-
-:yaml:
-  :datadir: "/etc/puppetlabs/code/environments/%{::environment}/hieradata"
-
-:json:
-  :datadir: "/etc/puppetlabs/code/environments/%{::environment}/hieradata"
-
-:hierarchy:
-  - "nodes/%{::clientcert}"
-  - "%{::node_group}/%{::node_environment}"
-  - "%{::node_group}/common"
-  - "location/%{::node_location}"
-  - "common"
 
 :http:
   :host: 127.0.0.1

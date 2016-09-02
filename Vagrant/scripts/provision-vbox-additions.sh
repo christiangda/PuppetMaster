@@ -2,9 +2,9 @@
 
 ################################################################################
 # build kernel module
-#/opt/VBoxGuestAdditions-5.0.24/init/vboxadd setup
-#systemctl enable vboxadd.service
-#systemctl start vboxadd.service
+/opt/VBoxGuestAdditions-5.0.24/init/vboxadd setup
+systemctl enable vboxadd.service
+systemctl start vboxadd.service
 
 ################################################################################
 # Compile and install CouchDB

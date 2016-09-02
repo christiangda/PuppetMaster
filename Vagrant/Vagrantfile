@@ -93,6 +93,5 @@ Vagrant.configure("2") do |config|
     # Puppet agent provision script
     agent02.vm.provision "shell", path: "./scripts/bootstrap-debian-family.sh"
     agent02.vm.provision "shell", path: "./scripts/provision-agent-debian-family.sh"
-    agent02.vm.provision "shell", path: "./scripts/provision-vbox-additions.sh"
   end
 end

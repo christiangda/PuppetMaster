@@ -11,7 +11,7 @@ cat << __EOF__ > $VAGRANT_GITIGNORE
 .gitignore
 
 # Ignore Our node file for vagrant
-00_only_vagrant.pp
+01_only_vagrant.pp
 __EOF__
 fi
 
@@ -22,27 +22,18 @@ cat << __EOF__ > $VAGRANT_MANIFEST
 ################################################################################
 # NODES DEFINITION
 node 'master.puppet.local' {
-  ##############################################################################
-  # your code here
-  class { 'motd':
-    content => "Hellow to Puppet 4 development environment \n",
-  }
+  include profile::common
+
 }
 
 node 'agent-01.puppet.local' {
-  ##############################################################################
-  # your code here
-  class { 'motd':
-    content => "Hellow to Puppet 4 development environment \n",
-  }
+  include profile::common
+
 }
 
 node 'agent-02.puppet.local' {
-  ##############################################################################
-  # your code here
-  class { 'motd':
-    content => "Hellow to Puppet 4 development environment \n",
-  }
+  include profile::common
+
 }
 __EOF__
 fi

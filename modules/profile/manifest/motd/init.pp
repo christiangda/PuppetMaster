@@ -1,10 +1,10 @@
 #
 class profile::motd::init (
-  $message = "You are connected to: $facts['fqdn'] \n",
+  $content = "You are connected to: %{::fqdn}",
   ){
 
-    $show_message = hiera(profile::motd::message, $message)
+    $show_content = hiera(profile::motd::content, $content)
     class { 'motd':
-      content => $show_message,
+      content => $show_content,
     }
   }

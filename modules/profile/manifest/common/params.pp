@@ -5,37 +5,40 @@ class profile::common::params {
   $default_timezone = 'Etc/UTC'
 
   # Default motd message
-  $default_motd_message = "You are connected to: $facter['fqdn']"
+  $default_motd_content = "You are connected to: %{::fqdn}"
 
   # Values based in OS type
-  case $::operatingsystem {
-    'RedHat', 'Fedora', 'CentOS': {
+  case $operatingsystem {
+    'CentOS': {
       $default_packages = [
         'epel-release',
         'openssl',
-        'vim-enhanced',
         'htop',
-        'elinks',
         'mlocate',
-        'nmap',
-        'telnet',
-        'sysstat',
+        'tzdata',
+      ]
+    }
+    'RedHat', 'Fedora': {
+      $default_packages = [
+        'openssl',
+        'htop',
+        'mlocate',
+        'tzdata',
       ]
     }
     'Debian', 'Ubuntu': {
       $default_packages = [
         'openssl',
-        'vim',
         'htop',
-        'elinks',
         'mlocate',
-        'nmap',
-        'telnet',
-        'sysstat',
+        'tzdata',
       ]
     }
     default: {
       fail("\"${module_name}\" not support for \"${::operatingsystem}\"")
     }
   }
+
+  #
+
 }
