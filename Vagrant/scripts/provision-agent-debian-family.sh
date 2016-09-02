@@ -34,7 +34,7 @@ source /etc/profile.d/puppet.sh
 ################################################################################
 # Create custom fact for hiera hierarchy
 mkdir -p /etc/puppetlabs/facter/facts.d/
-echo '{ "node_group": "vagrant", "node_environment": "vagrant", "location": "vagrant" }' | tee /etc/puppetlabs/facter/facts.d/custom.json
+echo '{ "node_group": "vagrant", "node_environment": "vagrant", "node_location": "vagrant" }' | tee /etc/puppetlabs/facter/facts.d/custom.json
 
 ################################################################################
 #

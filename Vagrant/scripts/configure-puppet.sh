@@ -85,6 +85,7 @@ cat << __EOF__ > $HIERA_CONF
 :http:
   :host: 127.0.0.1
   :port: 5984
+  :cache_timeout: 0
   :use_auth: false
   :auth_user: admin
   :auth_pass: admin
@@ -95,7 +96,7 @@ cat << __EOF__ > $HIERA_CONF
     - /%{::node_group}/%{::node_environment}
     - /%{::node_group}/common
     - /location/%{::node_location}
-    - /default
+    - /default/common
 
 :merge_behavior: deeper
 
@@ -105,11 +106,13 @@ __EOF__
 
 ################################################################################
 # Install package to manage couchdb as hiera repo data
-#/opt/puppetlabs/puppet/bin/gem install hiera-http
-#/opt/puppetlabs/puppet/bin/gem install deep_merge
+/opt/puppetlabs/puppet/bin/gem install hiera-http
+/opt/puppetlabs/puppet/bin/gem install deep_merge
+/opt/puppetlabs/puppet/bin/gem install lookup_http
 
 /opt/puppetlabs/server/bin/puppetserver gem install hiera-http
 /opt/puppetlabs/server/bin/puppetserver gem install deep_merge
+/opt/puppetlabs/server/bin/puppetserver gem install lookup_http
 
 ln -s /opt/puppetlabs/server/data/puppetserver/jruby-gems/gems/hiera-http-2.0.0/lib/hiera/backend/http_backend.rb \
 /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/hiera/backend/http_backend.rb

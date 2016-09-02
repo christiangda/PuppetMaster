@@ -59,6 +59,7 @@ sleep 15
 # Create defaults hiera hierarchy to test from the agent.puppet.local
 # See: /etc/puppet/hiera.yaml
 curl -X PUT http://127.0.0.1:5984/default -d '{}'
+curl -X PUT http://127.0.0.1:5984/default/common -d '{}'
 curl -X PUT http://127.0.0.1:5984/location -d '{}'
 curl -X PUT http://127.0.0.1:5984/location/vagrant -d '{}'
 curl -X PUT http://127.0.0.1:5984/vagrant -d '{}'
