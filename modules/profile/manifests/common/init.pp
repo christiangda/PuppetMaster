@@ -31,7 +31,8 @@ class profile::common::init (
 
   ##############################################################################
   # Timezone
+  $install_timezone = hiera(profile::common::timezone, $timezone)
   class { 'timezone':
-      timezone => $timezone,
+      timezone => $install_timezone,
   }
 }
