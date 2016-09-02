@@ -91,11 +91,11 @@ cat << __EOF__ > $HIERA_CONF
   :output: json
   :failure: graceful
   :paths:
-    - /hieradata/nodes/%{::clientcert}
-    - /hieradata/%{::node_group}/%{::node_environment}
-    - /hieradata/%{::node_group}/common
-    - /hieradata/location/%{::node_location}
-    - /hieradata/common
+    - /nodes/%{::clientcert}
+    - /%{::node_group}/%{::node_environment}
+    - /%{::node_group}/common
+    - /location/%{::node_location}
+    - /default
 
 :merge_behavior: deeper
 
@@ -105,8 +105,8 @@ __EOF__
 
 ################################################################################
 # Install package to manage couchdb as hiera repo data
-/opt/puppetlabs/puppet/bin/gem install hiera-http
-/opt/puppetlabs/puppet/bin/gem install deep_merge
+#/opt/puppetlabs/puppet/bin/gem install hiera-http
+#/opt/puppetlabs/puppet/bin/gem install deep_merge
 
 /opt/puppetlabs/server/bin/puppetserver gem install hiera-http
 /opt/puppetlabs/server/bin/puppetserver gem install deep_merge
