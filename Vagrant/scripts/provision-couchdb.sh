@@ -59,9 +59,24 @@ sleep 15
 # Create defaults hiera hierarchy to test from the agent.puppet.local
 # See: /etc/puppet/hiera.yaml
 curl -X PUT http://127.0.0.1:5984/default -d '{}'
-curl -X PUT http://127.0.0.1:5984/default/common -d '{}'
+curl -X PUT http://127.0.0.1:5984/default/common -d '{
+   "profile::common::packages::redhat_family": [
+       "nmap"
+   ],
+   "profile::common::motd::content": "         hostname: %{::fqdn}\n       node_group: %{::node_group}\n node_environment: %{::node_environment}\n    node_location: %{::node_location}\n       puppet env: %{::environment}\n\n",
+   "profile::common::packages::debian_family": [
+       "nmap"
+   ]
+}'
 curl -X PUT http://127.0.0.1:5984/location -d '{}'
-curl -X PUT http://127.0.0.1:5984/location/vagrant -d '{}'
+curl -X PUT http://127.0.0.1:5984/location/vagrant -d '{
+   "profile::common::packages::redhat_family": [
+       "git"
+   ],
+   "profile::common::packages::debian_family": [
+       "git"
+   ]
+}'
 curl -X PUT http://127.0.0.1:5984/vagrant -d '{}'
 curl -X PUT http://127.0.0.1:5984/vagrant/common -d '{}'
 curl -X PUT http://127.0.0.1:5984/vagrant/vagrant -d '{}'

@@ -48,6 +48,7 @@ Vagrant.configure("2") do |config|
     master.vm.provision "shell", path: "./scripts/configure-puppetdb-ssl.sh"
     master.vm.provision "shell", path: "./scripts/enable-manifest-for-vagrant-nodes.sh"
     master.vm.provision "shell", path: "./scripts/provision-vbox-additions.sh"
+    master.vm.provision "shell", path: "./scripts/provision-agent-master.sh"
   end
 
   ##############################################################################

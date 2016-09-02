@@ -13,6 +13,11 @@ Example: hiera "key"
 hiera profile::common::timezone
 ```
 
+### Query as specific client (based on facters)
+```
+hiera -a profile::common::packages::debian_family ::node_group=vagrant ::node_location=vagrant ::node_environment=vagrant ::osfamily=Ubuntu ::clientcert="agent-02.puppet.local" --debug
+```
+
 ## CouchDB
 
 ### Access to web gui
