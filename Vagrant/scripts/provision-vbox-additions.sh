@@ -3,6 +3,8 @@
 ################################################################################
 # build kernel module
 /opt/VBoxGuestAdditions-5.0.24/init/vboxadd setup
+/opt/VBoxGuestAdditions-5.0.24/init/vboxadd-service start
+
 systemctl enable vboxadd.service
 systemctl start vboxadd.service
 

@@ -5,6 +5,10 @@ class profile::common::init (
   ) inherits profile::common::params {
 
   ##############################################################################
+  # Include dependencies
+  include stdlib
+
+  ##############################################################################
   # Install Base packages
   case $operatingsystem {
     'RedHat', 'Fedora', 'CentOS': {
@@ -16,12 +20,12 @@ class profile::common::init (
   }
 
   # Merging data
-  $install_packages = unique($default_packages + $install_additionals_packages)
+  $software_array = $default_packages + $install_additionals_packages
+  $install_packages = unique($software_array)
   # Install
-  notice($install_packages)
-  # package { $install_packages:
-  #   ensure => 'installed',
-  # }
+  package { $install_packages:
+    ensure => 'installed',
+  }
 
   ##############################################################################
   # Include modt profile
