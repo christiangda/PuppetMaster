@@ -29,10 +29,6 @@ echo '{ "node_group": "vagrant", "node_environment": "vagrant", "node_location":
 
 ################################################################################
 #
-/opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true
-
-################################################################################
-#
 puppet agent --enable
 puppet agent --test --server master.puppet.local --environment production --noop
 sleep 5
