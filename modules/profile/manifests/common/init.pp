@@ -18,9 +18,10 @@ class profile::common::init (
   # Merging data
   $install_packages = unique($default_packages + $install_additionals_packages)
   # Install
-  package { $install_packages:
-    ensure => 'installed',
-  }
+  notice($install_packages)
+  # package { $install_packages:
+  #   ensure => 'installed',
+  # }
 
   ##############################################################################
   # Include modt profile

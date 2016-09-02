@@ -15,7 +15,6 @@ class profile::common::params {
         'openssl',
         'htop',
         'mlocate',
-        'tzdata',
         'sysstat',
       ]
     }
@@ -24,7 +23,6 @@ class profile::common::params {
         'openssl',
         'htop',
         'mlocate',
-        'tzdata',
         'sysstat',
       ]
     }
@@ -33,7 +31,6 @@ class profile::common::params {
         'openssl',
         'htop',
         'mlocate',
-        'tzdata',
         'sysstat',
       ]
     }
