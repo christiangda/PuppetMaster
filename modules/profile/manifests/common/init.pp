@@ -1,24 +1,37 @@
 #
 class profile::common::init (
-  $timezone             = $profile::common::params::default_timezone,
-  $motd_content         = $profile::common::params::default_motd_content,
-  $additionals_packages = $profile::common::params::default_packages,
+  $timezone     = $profile::common::params::default_timezone,
+  $motd_content = $profile::common::params::default_motd_content,
   ) inherits profile::common::params {
 
   ##############################################################################
   # Install Base packages
-  $install_additionals_packages = hiera_array(profile::common::additionals_packages, [])
-  # mergin both arrays
-  $install_packages = [$additionals_packages, $install_additionals_packages]
-  package { $install_packages: ensure => present }
+  case $operatingsystem {
+    'RedHat', 'Fedora', 'CentOS': {
+      $install_additionals_packages = hiera_array(profile::common::packages::redhat_family, [])
+    }
+    'Debian', 'Ubuntu': {
+      $install_additionals_packages = hiera_array(profile::common::packages::debian_family, [])
+    }
+  }
+
+  # Merging data
+  $install_packages = unique($default_packages + $install_additionals_packages)
+  # Install
+  package { $install_packages:
+    ensure => 'installed',
+  }
 
   ##############################################################################
   # Include modt profile
   $show_content = hiera(profile::common::motd::content, $motd_content)
-  class {'profile::motd::init':
+  class { 'motd':
     content => $show_content,
   }
 
   ##############################################################################
-  #
+  # Timezone
+  class { 'timezone':
+      timezone => $timezone,
+  }
 }

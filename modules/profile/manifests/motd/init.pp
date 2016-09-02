@@ -1,10 +1,10 @@
 #
 class profile::motd::init (
-  $content = "You are connected to: ${::fqdn}. \n This system is managed by Puppet version ${::puppetversion}.",
+  $content = "You are connected to: %{::fqdn}",
   ){
 
-    $show_message = hiera(profile::motd::content, $content)
+    $show_content = hiera(profile::motd::content, $content)
     class { 'motd':
-      content => $show_message,
+      content => $show_content,
     }
   }
