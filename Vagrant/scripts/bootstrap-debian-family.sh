@@ -2,10 +2,10 @@
 
 ################################################################################
 # Prepare the system
-apt-get -y install linux-headers-$(uname -r) dkms
+#apt-get -y install linux-headers-$(uname -r) dkms
 apt-get -y update
-apt-get -y upgrade
-apt-get -y autoremove
+#apt-get -y upgrade
+#apt-get -y autoremove
 apt-get -y install vim htop elinks mlocate nmap telnet
 
 ################################################################################

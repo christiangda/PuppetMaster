@@ -1,6 +1,6 @@
-#stdlib
+# stdlib
 
-####Table of Contents
+#### Table of Contents
 
 1. [Overview](#overview)
 2. [Module Description - What the module does and why it is useful](#module-description)
@@ -10,11 +10,11 @@
 5. [Limitations - OS compatibility, etc.](#limitations)
 6. [Development - Guide for contributing to the module](#development)
 
-##Overview
+## Overview
 
 Adds a standard library of resources for Puppet modules.
 
-##Module Description
+## Module Description
 
 This module provides a standard library of resources for the development of Puppet modules. Puppet modules make heavy use of this standard library. The stdlib module adds the following resources to Puppet:
 
@@ -22,16 +22,16 @@ This module provides a standard library of resources for the development of Pupp
  * Facts
  * Functions
  * Defined resource types
- * Types
+ * Data Types
  * Providers
 
 > *Note:* As of version 3.7, Puppet Enterprise no longer includes the stdlib module. If you're running Puppet Enterprise, you should install the most recent release of stdlib for compatibility with Puppet modules.
 
-##Setup
+## Setup
 
 Installing the stdlib module adds the functions, facts, and resources of this standard library to Puppet.
 
-##Usage
+## Usage
 
 After you've installed stdlib, all of its functions, facts, and resources are available for module use or development.
 
@@ -73,7 +73,7 @@ The `stdlib::stages` class declares various run stages for deploying infrastruct
 
 * `stdlib::stages`: Manages a standard set of run stages for Puppet. It is managed by the stdlib class and should not be declared independently.
 
-### Types
+### Resource Types
 
 #### `file_line`
 
@@ -124,15 +124,58 @@ error will be raised unless the `multiple => true` parameter is set.
 
 All parameters are optional, unless otherwise noted.
 
-* `after`: Specifies the line after which Puppet adds any new lines. (Existing lines are added in place.) Valid options: String. Default: Undefined.
+* `after`: Specifies the line after which Puppet adds any new lines using a regular expression. (Existing lines are added in place.) Valid options: String containing a regex. Default: Undefined.
 * `ensure`: Ensures whether the resource is present. Valid options: 'present', 'absent'. Default: 'present'.
 * `line`: **Required.** Sets the line to be added to the file located by the `path` parameter. Valid options: String. Default: Undefined.
 * `match`: Specifies a regular expression to run against existing lines in the file; if a match is found, it is replaced rather than adding a new line. A regex comparison is performed against the line value, and if it does not match, an exception is raised. Valid options: String containing a regex. Default: Undefined.
-* `match_for_absence`: An optional value to determine if match should be applied when `ensure => absent`. If set to true and match is set, the line that matches match will be deleted. If set to false (the default), match is ignored when `ensure => absent` and the value of `line` is used instead. Default: false.
+* `match_for_absence`: An optional value to determine if match should be applied when `ensure => absent`. If set to true and match is set, the line that matches match will be deleted. If set to false (the default), match is ignored when `ensure => absent` and the value of `line` is used instead. Ignored when `ensure => present`. Default: false.
 * `multiple`: Determines if `match` and/or `after` can change multiple lines. If set to false, an exception will be raised if more than one line matches. Valid options: 'true', 'false'. Default: Undefined.
 * `name`: Sets the name to use as the identity of the resource. This is necessary if you want the resource namevar to differ from the supplied `title` of the resource. Valid options: String. Default: Undefined.
 * `path`: **Required.** Defines the file in which Puppet will ensure the line specified by `line`. Must be an absolute path to the file.
 * `replace`: Defines whether the resource will overwrite an existing line that matches the `match` parameter. If set to false and a line is found matching the `match` param, the line will not be placed in the file. Valid options: true, false, yes, no. Default: true
+
+### Data Types
+
+#### `Stdlib::Absolutepath`
+
+A strict absolute path type. Uses a Variant of Unixpath and Windowspath types.
+
+Acceptable input examples:    /var/log
+                              /usr2/username/bin:/usr/local/bin:/usr/bin:.
+                              C:\\WINDOWS\\System32
+Unacceptable input example:   ../relative_path
+
+#### `Stdlib::Httpsurl`
+
+Matches https URLs.
+
+Acceptable input example:     https://hello.com
+Unacceptable input example:   httds://notquiteright.org
+
+#### `Stdlib::Httpurl`
+
+Matches both https and http URLs.
+
+Acceptable input example:     https://hello.com
+                              http://hello.com
+Unacceptable input example:   httds://notquiteright.org
+
+#### `Stdlib::Unixpath`
+
+Matches paths on Unix type Operating Systems.
+
+Acceptable input example:     /usr2/username/bin:/usr/local/bin:/usr/bin:.
+                              /var/tmp
+Unacceptable input example:   C:/whatever
+
+#### `Stdlib::Windowspath`
+
+Matches paths on Windows Operating systems.
+
+Acceptable input example:     C:\\WINDOWS\\System32
+                              C:\\
+                              \\\\host\\windows
+Unacceptable input example:   /usr2/username/bin:/usr/local/bin:/usr/bin:.
 
 ### Functions
 
@@ -245,6 +288,19 @@ Converts a given integer or base 10 string representing an integer to a specifie
 
 If called with only an array, it counts the number of elements that are **not** nil/undef. If called with a second argument, counts the number of elements in an array that matches the second argument. *Type*: rvalue.
 
+#### `deep_merge`
+
+Recursively merges two or more hashes together and returns the resulting hash.
+  $hash1 = {'one' => 1, 'two' => 2, 'three' => { 'four' => 4 } }
+  $hash2 = {'two' => 'dos', 'three' => { 'five' => 5 } }
+  $merged_hash = deep_merge($hash1, $hash2)
+
+The resulting hash is equivalent to:
+  $merged_hash = { 'one' => 1, 'two' => 'dos', 'three' => { 'four' => 4, 'five' => 5 } }
+
+When there is a duplicate key that is a hash, they are recursively merged. When there is a duplicate key that is not a hash, the key in the rightmost hash will "win.".
+*Type*: rvalue, rvalue.
+
 #### `defined_with_params`
 
 Takes a resource reference and an optional hash of attributes. Returns 'true' if a resource with the specified attributes has already been added to the catalog. Returns 'false' otherwise.
@@ -263,11 +319,23 @@ Takes a resource reference and an optional hash of attributes. Returns 'true' if
 
 #### `delete`
 
-Deletes all instances of a given element from an array, substring from a string, or key from a hash. For example, `delete(['a','b','c','b'], 'b')` returns ['a','c']; `delete('abracadabra', 'bra')` returns 'acada'. `delete({'a' => 1,'b' => 2,'c' => 3},['b','c'])` returns {'a'=> 1}. *Type*: rvalue.
+Deletes all instances of a given element from an array, substring from a string, or key from a hash.
+
+For example, `delete(['a','b','c','b'], 'b')` returns ['a','c']; `delete('abracadabra', 'bra')` returns 'acada'. `delete({'a' => 1,'b' => 2,'c' => 3},['b','c'])` returns {'a'=> 1}, `delete(['ab', 'b'], 'b')` returns ['ab'].
+
+*Type*: rvalue.
 
 #### `delete_at`
 
 Deletes a determined indexed value from an array. For example, `delete_at(['a','b','c'], 1)` returns ['a','c']. *Type*: rvalue.
+
+#### `delete_regex`
+
+Deletes all instances of a given element from an array or hash that match a provided regular expression. A string will be treated as a one-item array.
+
+For example, `delete_regex(['a','b','c','b'], 'b')` returns ['a','c']; `delete_regex({'a' => 1,'b' => 2,'c' => 3},['b','c'])` returns {'a'=> 1}, `delete_regex(['abf', 'ab', 'ac'], '^ab.*')` returns ['ac']. `delete_regex(['ab', 'b'], 'b')` returns ['ab'].
+
+*Type*: rvalue.
 
 #### `delete_values`
 
@@ -277,11 +345,30 @@ Deletes all instances of a given value from a hash. For example, `delete_values(
 
 Deletes all instances of the undef value from an array or hash. For example, `$hash = delete_undef_values({a=>'A', b=>'', c=>undef, d => false})` returns {a => 'A', b => '', d => false}. *Type*: rvalue.
 
+#### `deprecation`
+
+Prints deprecation warnings and logs a warning once for a given key:
+
+```
+deprecation(key, message)
+```
+
+* key: to keep the number of messages low, during the lifetime of a puppet process, only one message per key is logged.
+* message: the text to be logged.
+
+The Puppet settings '[disable_warnings](https://docs.puppet.com/puppet/latest/reference/configuration.html#disablewarnings)', '[max_deprecations](https://docs.puppet.com/puppet/latest/reference/configuration.html#maxdeprecations)', and '[strict](https://docs.puppet.com/puppet/latest/reference/configuration.html#strict)' affect this function. Set 'strict' to `error` to fail immediately with the deprecation message, `off` to output emit no messages at all, or `warning` (default) to log all warnings.
+
+Additionally you can set the environment variable `STDLIB_LOG_DEPRECATION` to decide whether or not to log deprecation warnings: if this environment variable is set to `true`, the functions log a warning, if it is set to `false`, no warnings are logged. If no value is set at all, Puppet 4 will emit warnings, while Puppet 3 will not. Using this setting is especially useful for automated tests to avoid flooding your logs before you are ready to migrate.
+
+*Type*: String, String.
+
 #### `difference`
 
 Returns the difference between two arrays. The returned array is a copy of the original array, removing any items that also appear in the second array. For example, `difference(["a","b","c"],["b","c","d"])` returns ["a"]. *Type*: rvalue.
 
 #### `dig`
+
+DEPRECATED: This function has been replaced in Puppet 4.5.0, use dig44() for backwards compatibility or use the new version.
 
 *Type*: rvalue.
 
@@ -309,6 +396,42 @@ $value = dig($data, ['a', 'b', 2], 'not_found')
 
 # using the default value
 $value = dig($data, ['a', 'b', 'c', 'd'], 'not_found')
+# $value = 'not_found'
+~~~
+
+1. **$data** The data structure we are working with.
+2. **['a', 'b', 2]** The path array.
+3. **'not_found'** The default value. It will be returned if nothing is found.
+   (optional, defaults to *undef*)
+
+#### `dig44`
+
+*Type*: rvalue.
+
+Retrieves a value within multiple layers of hashes and arrays via an array of keys containing a path. The function goes through the structure by each path component and tries to return the value at the end of the path.
+
+In addition to the required path argument, the function accepts the default argument. It is returned if the path is not correct, if no value was found, or if any other error has occurred.
+
+~~~ruby
+$data = {
+  'a' => {
+    'b' => [
+      'b1',
+      'b2',
+      'b3',
+    ]
+  }
+}
+
+$value = dig44($data, ['a', 'b', 2])
+# $value = 'b3'
+
+# with all possible options
+$value = dig44($data, ['a', 'b', 2], 'not_found')
+# $value = 'b3'
+
+# using the default value
+$value = dig44($data, ['a', 'b', 'c', 'd'], 'not_found')
 # $value = 'not_found'
 ~~~
 
@@ -356,7 +479,7 @@ For Array:
 
 For Hash:
 
-    ensure_packages({'ksh' => { enure => '20120801-1' } ,  'mypackage' => { source => '/tmp/myrpm-1.0.0.x86_64.rpm', provider => "rpm" }}, {'ensure' => 'present'})
+    ensure_packages({'ksh' => { ensure => '20120801-1' } ,  'mypackage' => { source => '/tmp/myrpm-1.0.0.x86_64.rpm', provider => "rpm" }}, {'ensure' => 'present'})
 
 #### `ensure_resource`
 
@@ -401,11 +524,11 @@ From Hiera Backend:
 
 ~~~
 userlist:
-dan:
-  gid: 'mygroup'
-uid: '600'
-alex:
-gid: 'mygroup'
+  dan:
+    gid: 'mygroup'
+    uid: '600'
+  alex:
+    gid: 'mygroup'
 
 ensure_resources('user', hiera_hash('userlist'), {'ensure' => 'present'})
 ~~~
@@ -657,10 +780,40 @@ Returns the keys of a hash as an array. *Type*: rvalue.
 
 #### `loadyaml`
 
-Loads a YAML file containing an array, string, or hash, and returns the data in the corresponding native data type. For example:
+Loads a YAML file containing an array, string, or hash, and returns the data in the corresponding native data type.
+
+For example:
 
   ~~~
   $myhash = loadyaml('/etc/puppet/data/myhash.yaml')
+  ~~~
+
+The second parameter will be returned if the file was not found or could not be parsed.
+
+For example:
+
+  ~~~
+  $myhash = loadyaml('no-file.yaml', {'default'=>'value'})
+  ~~~
+
+*Type*: rvalue.
+
+#### `loadjson`
+
+Loads a JSON file containing an array, string, or hash, and returns the data in the corresponding native data type.
+
+For example:
+
+  ~~~
+  $myhash = loadjson('/etc/puppet/data/myhash.json')
+  ~~~
+
+The second parameter will be returned if the file was not found or could not be parsed.
+
+For example:
+
+  ~~~
+  $myhash = loadjson('no-file.json', {'default'=>'value'})
   ~~~
 
 *Type*: rvalue.
@@ -797,10 +950,15 @@ The third argument to this function is the salt to use.
 Extrapolates a range as an array when given in the form of '(start, stop)'. For example, `range("0", "9")` returns [0,1,2,3,4,5,6,7,8,9]. Zero-padded strings are converted to integers automatically, so `range("00", "09")` returns [0,1,2,3,4,5,6,7,8,9].
 
 Non-integer strings are accepted; `range("a", "c")` returns ["a","b","c"], and `range("host01", "host10")` returns ["host01", "host02", ..., "host09", "host10"].
+NB Be explicit in including trailing zeros. Otherwise the underlying ruby function will fail.
 
 Passing a third argument will cause the generated range to step by that interval, e.g. `range("0", "9", "2")` returns ["0","2","4","6","8"].
 
 *Type*: rvalue.
+
+#### `regexpescape`
+
+Regexp escape a string or array of strings. Requires either a single string or an array as an input. *Type*: rvalue.
 
 #### `reject`
 
@@ -817,6 +975,40 @@ Strips spaces to the right of the string. *Type*: rvalue.
 #### `seeded_rand`
 
 Takes an integer max value and a string seed value and returns a repeatable random integer smaller than max. Like `fqdn_rand`, but does not add node specific data to the seed.  *Type*: rvalue.
+
+#### `shell_escape`
+
+Escapes a string so that it can be safely used in a Bourne shell command line. Note that the resulting string should be used unquoted and is not intended for use in double quotes nor in single quotes. This function behaves the same as ruby's `Shellwords.shellescape()` function, also see the [ruby documentation](http://ruby-doc.org/stdlib-2.3.0/libdoc/shellwords/rdoc/Shellwords.html#method-c-shellescape).
+
+*Example:*
+~~~
+shell_escape('foo b"ar') => 'foo\ b\"ar'
+~~~
+
+*Type*: rvalue.
+
+#### `shell_join`
+
+Builds a command line string from the given array of strings. Each array item is escaped for Bourne shell. All items are
+then joined together, with a single space in between. This function behaves the same as ruby's `Shellwords.shelljoin()` function, also see the [ruby documentation](http://ruby-doc.org/stdlib-2.3.0/libdoc/shellwords/rdoc/Shellwords.html#method-c-shelljoin).
+
+*Example:*
+~~~
+shell_join(['foo bar', 'ba"z']) => 'foo\ bar ba\"z'
+~~~
+
+*Type*: rvalue.
+
+#### `shell_split`
+
+Splits a string into an array of tokens in the same way the Bourne shell does. This function behaves the same as ruby's `Shellwords.shellsplit()` function, also see the [ruby documentation](http://ruby-doc.org/stdlib-2.3.0/libdoc/shellwords/rdoc/Shellwords.html#method-c-shellsplit).
+
+*Example:*
+~~~
+shell_split('foo\ bar ba\"z') => ['foo bar', 'ba"z']
+~~~
+
+*Type*: rvalue.
 
 #### `shuffle`
 
@@ -1232,9 +1424,85 @@ The following values will fail, causing compilation to abort:
   ~~~
 
 
+#### `validate_legacy`
+
+Validates a value against both a specified type and a deprecated validation function. Silently passes if both pass, errors if only one validation passes, and fails if both validations return false.
+
+Accepts arguments for:
+* the type to check the value against,
+* the full name of the previous validation function,
+* the value to be checked,
+* an unspecified number of arguments needed for the previous validation function.
+
+Example:
+
+```
+validate_legacy("Optional[String]", "validate_re", "Value to be validated", ["."])
+```
+
+This function supports updating modules from Puppet 3 style argument validation (using the stdlib `validate_*` functions) to Puppet 4 data types, without breaking functionality for those depending on Puppet 3 style validation.
+
+> Note: This function relies on internal APIs from Puppet 4.4.0 (PE 2016.1) onwards, and doesn't work on earlier versions.
+
+##### For module users
+
+If you are running Puppet 4 and receiving deprecation warnings about `validate_*` functions, the `validate_legacy` function can help you find and resolve the deprecated code.
+
+In Puppet 3, the `validate_*` functions were the only way to easily check the types of class and defined type arguments. Some of the functions provided additional helpers like [validate_numeric](#validate_numeric), which unintentionally allowed not only numbers, but also arrays of numbers. Puppet 4 allows much better defined type checking using [data types](https://docs.puppet.com/puppet/latest/reference/lang_data.html), without such unintentional effects. The `validate_legacy` function makes these differences visible and makes it easier to move to the clearer Puppet 4 syntax.
+
+Depending on the current state of development of the modules you use and the data you feed those modules, you'll encounter different messages:
+
+* `Notice: Accepting previously invalid value for target type '<type>'`: This message is informational only. You're using values that are allowed by the new type, but would have been invalid by the old validation function.
+* `Warning: This method is deprecated, please use the stdlib validate_legacy function`: The module has not yet upgraded to `validate_legacy`. Use the [deprecation](#deprecation) options to silence warnings for now, or submit a fix with the module's developer. See the information [for module developers](#for-module-developers) below for how to fix the issue.
+* `Warning: validate_legacy(<function>) expected <type> value, got <actual type>_`: Your code passes a value that was accepted by the Puppet 3 style validation, but will not be accepted by the next version of the module. Most often, you can fix this by removing quotes from numbers or booleans.
+* `Error: Evaluation Error: Error while evaluating a Resource Statement, Evaluation Error: Error while evaluating a Function Call, validate_legacy(<function>) expected <type> value, got <actual type>`: Your code passes a value that is not acceptable to either the new or the old style validation.
+
+##### For module developers
+
+Many `validate_*` functions have surprising holes in their validation. For example, [validate_numeric](#validate_numeric) allows not only numbers, but also arrays of numbers or strings that look like numbers, without giving you any control over the specifics. In contrast, Puppet 4 [data types](https://docs.puppet.com/puppet/latest/reference/lang_data.html) allows you to choose between `Numeric`, `Array[Numeric]`, or `Optional[Numeric]`. The `validate_legacy` function helps you move from Puppet 3 style validation to Puppet 4 validation without breaking functionality your module's users depend on.
+
+For each parameter of your classes and defined types, choose a new Puppet 4 data type to use. In most cases, the new data type allows a different set of values than the original `validate_*` function. The situation then looks like this:
+
+|              | `validate_` pass | `validate_` fail |
+| ------------ | ---------------- | ---------------- |
+| matches type | pass             | pass, notice     |
+| fails type   | pass, deprecated | fail             |
+
+The code after the validation still has to handle all possible values for now, but users of your code can change their manifests to pass only values that match the new type.
+
+For each `validate_*` function in stdlib, there is a matching `Stdlib::Compat::*` type that allows the appropriate set of values. See the documentation in the `types/` directory in the stdlib source code for caveats.
+
+For example, given a class that should accept only numbers, like this:
+
+~~~
+class example($value) {
+  validate_numeric($value)
+~~~
+
+the resulting validation code looks like this:
+
+~~~
+class example(
+  Variant[Stdlib::Compat::Numeric, Numeric] $value
+) {
+  validate_legacy(Numeric, 'validate_numeric', $value)
+~~~
+
+Here, the type of `$value` is defined as `Variant[Stdlib::Compat::Numeric, Numeric]`, which allows any `Numeric` (the new type), as well as all values previously accepted by `validate_numeric` (through `Stdlib::Compat::Numeric`).
+
+The call to `validate_legacy` takes care of triggering the correct log or fail message for you. It requires the new type, the previous validation function name, and all arguments to that function.
+
+If your module still supported Puppet 3, this is a breaking change. Update your `metadata.json` requirements section to indicate that your module no longer supports Puppet 3, and bump the major version of your module. With this change, all existing tests for your module should still pass. Create additional tests for the new possible values.
+
+As a breaking change, this is also a good time to call [`deprecation`](#deprecation) for any parameters you want to get rid of, or to add additional constraints on your parameters.
+
+After releasing this version, you can release another breaking change release where you remove all compat types and all calls to `validate_legacy`. At that time, you can also go through your code and remove any leftovers dealing with the previously possible values.
+
+Always note such changes in your CHANGELOG and README.
+
 #### `validate_numeric`
 
-Validates that the first argument is a numeric value (or an array of numeric values). Aborts catalog compilation if any of the checks fail.
+Validates that the first argument is a numeric value (or an array or string of numeric values). Aborts catalog compilation if any of the checks fail.
 
   The second argument is optional and passes a maximum. (All elements of) the first argument has to be less or equal to this max.
 
@@ -1393,7 +1661,7 @@ Versions | Puppet 2.6 | Puppet 2.7 | Puppet 3.x | Puppet 4.x |
 Puppet Labs modules on the Puppet Forge are open projects, and community contributions are essential for keeping them great. We can’t access the huge number of platforms and myriad hardware, software, and deployment configurations that Puppet is intended to serve. We want to keep it as easy as possible to contribute changes so that our modules work in your environment. There are a few guidelines that we need contributors to follow so that we can have a chance of keeping on top of things. For more information, see our [module contribution guide](https://docs.puppetlabs.com/forge/contributing.html).
 
 To report or research a bug with any part of this module, please go to
-[http://tickets.puppetlabs.com/browse/PUP](http://tickets.puppetlabs.com/browse/PUP).
+[http://tickets.puppetlabs.com/browse/MODULES](http://tickets.puppetlabs.com/browse/MODULES).
 
 ## Contributors
 

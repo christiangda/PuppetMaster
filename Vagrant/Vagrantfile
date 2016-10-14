@@ -11,10 +11,10 @@ Vagrant.configure("2") do |config|
   #
   config.vm.define "master" do |master|
     # Vagrant box flavor and repo
-    #master.vm.box = "centos/7"
-    #master.vm.box_url = "https://atlas.hashicorp.com/centos/boxes/7"
-    master.vm.box = "geerlingguy/centos7"
-    master.vm.box_url = "https://atlas.hashicorp.com/geerlingguy/boxes/centos7"
+    # master.vm.box = "centos/7"
+    # master.vm.box_url = "https://atlas.hashicorp.com/centos/boxes/7"
+    master.vm.box = "bento/centos-7.2"
+    master.vm.box_url = "https://atlas.hashicorp.com/bento/boxes/centos-7.2"
 
     master.vm.hostname =  "master.puppet.local"
     master.vm.network "private_network", ip: "192.168.33.100"
@@ -47,7 +47,7 @@ Vagrant.configure("2") do |config|
     master.vm.provision "shell", path: "./scripts/configure-puppet.sh"
     master.vm.provision "shell", path: "./scripts/configure-puppetdb-ssl.sh"
     master.vm.provision "shell", path: "./scripts/enable-manifest-for-vagrant-nodes.sh"
-    master.vm.provision "shell", path: "./scripts/provision-vbox-additions.sh"
+    #master.vm.provision "shell", path: "./scripts/provision-vbox-additions.sh"
     master.vm.provision "shell", path: "./scripts/provision-agent-master.sh"
   end
 
@@ -55,8 +55,8 @@ Vagrant.configure("2") do |config|
   # AGENTS' CONFIG
   config.vm.define "agent-01" do |agent01|
     # Vagrant box flavor and repo
-    agent01.vm.box = "geerlingguy/centos7"
-    agent01.vm.box_url = "https://atlas.hashicorp.com/geerlingguy/boxes/centos7"
+    agent01.vm.box = "bento/centos-7.2"
+    agent01.vm.box_url = "https://atlas.hashicorp.com/bento/boxes/centos-7.2"
 
     agent01.vm.hostname =  "agent-01.puppet.local"
     agent01.vm.network "private_network", ip: "192.168.33.101"
@@ -72,7 +72,7 @@ Vagrant.configure("2") do |config|
     # Puppet agent provision script
     agent01.vm.provision "shell", path: "./scripts/bootstrap-redhat-family.sh"
     agent01.vm.provision "shell", path: "./scripts/provision-agent-redhat-family.sh"
-    agent01.vm.provision "shell", path: "./scripts/provision-vbox-additions.sh"
+    #agent01.vm.provision "shell", path: "./scripts/provision-vbox-additions.sh"
   end
 
   config.vm.define "agent-02" do |agent02|

@@ -24,34 +24,74 @@ make && sudo make install
 ################################################################################
 # Compile and install CouchDB
 cd /usr/local/src
-wget http://www-us.apache.org/dist/couchdb/source/1.6.1/apache-couchdb-1.6.1.tar.gz
-tar -xvf apache-couchdb-1.6.1.tar.gz
-cd apache-couchdb-1.6.1
-./configure --with-erlang=/usr/lib64/erlang/usr/include/
-make && sudo make install
+wget http://www-us.apache.org/dist/couchdb/source/2.0.0/apache-couchdb-2.0.0.tar.gz
+tar -xvf apache-couchdb-2.0.0.tar.gz
+cd apache-couchdb-2.0.0
+./configure
+make release
 
 ################################################################################
 # Create user
-useradd --no-create-home couchdb
-chown -R couchdb:couchdb /usr/local/{lib,etc}/couchdb /usr/local/var/{lib,log,run}/couchdb
+adduser --system --create-home --shell /bin/bash --user-group couchdb
+cd /usr/local/src/apache-couchdb-2.0.0
+cp -R rel/couchdb /home/couchdb/
+chown -R couchdb:couchdb /home/couchdb/
+find /home/couchdb/ -type d -exec chmod 0770 {} \;
+chmod 0644 /home/couchdb/couchdb/etc/*
 
-# permanent auto start
-ln -sf /usr/local/etc/rc.d/couchdb /etc/init.d/couchdb
-chkconfig --add couchdb
-chkconfig --level 2345 couchdb on
+cat > /etc/profile.d/couchdb.sh << _EOF
+export PATH=\$PATH:/home/couchdb/couchdb/bin
+_EOF
+source /etc/profile.d/couchdb.sh
 
 ################################################################################
-#
-ln -s /usr/local/etc/couchdb /etc/couchdb
-sed -i 's/bind_address = 127.0.0.1/bind_address = 0.0.0.0/g' /usr/local/etc/couchdb/default.ini
+# prepare setting
+# start couchdb to configure default databases
+sudo -i -u couchdb couchdb/bin/couchdb > /dev/null 2>&1 &
+sleep 60
+
+# Create defaults databases
+curl -X PUT http://127.0.0.1:5984/_users
+curl -X PUT http://127.0.0.1:5984/_replicator
+curl -X PUT http://127.0.0.1:5984/_global_changes
+
+# stop couchdb after setting
+pkill -u couchdb
+
+
+# permanent auto start
+cat > /lib/systemd/system/couchdb.service << _EOF
+[Unit]
+Description=the system-wide CouchDB instance
+After=network.target
+
+[Service]
+Type=simple
+User=couchdb
+Group=couchdb
+#ExecStart=/bin/su - couchdb couchdb/bin/couchdb &
+ExecStart=/home/couchdb/couchdb/bin/couchdb
+PIDFile=/run/couchdb/couchdb.pid
+ExecStop=pkill -u couchdb
+
+[Install]
+WantedBy=multi-user.target
+_EOF
+
+touch /home/couchdb/couchdb/var/log/couch.log
+chown couchdb.couchdb /home/couchdb/couchdb/var/log/couch.log
+ln -sf /lib/systemd/system/couchdb.service /etc/systemd/system/couchdb.service
+ln -s /home/couchdb/couchdb/etc /etc/couchdb
+ln -s /home/couchdb/couchdb/var/log /var/log/couchdb
+sed -i 's/bind_address = 127.0.0.1/bind_address = 0.0.0.0/g' /home/couchdb/couchdb/etc/default.ini
+sed -i '/\[log\]/a file \= \/home\/couchdb\/couchdb\/var\/log\/couch\.log' /home/couchdb/couchdb/etc/default.ini
 
 ################################################################################
 # start service
-service couchdb start
+systemctl enable couchdb.service
+systemctl start couchdb.service
 
-################################################################################
-# Neccesary to wait for CouchDB start
-sleep 15
+sleep 60
 
 # Set user admin's passowrd
 #curl -X PUT http://127.0.0.1:5984/_config/admins/admin -d '"admin"'

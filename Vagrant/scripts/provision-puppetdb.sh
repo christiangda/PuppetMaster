@@ -2,7 +2,7 @@
 
 ################################################################################
 # prepare requirements
-yum -y update
+#yum -y update
 yum -y install puppetdb-termini puppetdb
 
 

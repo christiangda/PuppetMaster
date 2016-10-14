@@ -71,7 +71,8 @@ Puppet::Type.newtype(:file_line) do
   newparam(:match_for_absence) do
     desc 'An optional value to determine if match should be applied when ensure => absent.' +
          ' If set to true and match is set, the line that matches match will be deleted.' +
-         ' If set to false (the default), match is ignored when ensure => absent.'
+         ' If set to false (the default), match is ignored when ensure => absent.' +
+         ' When `ensure => present`, match_for_absence is ignored.'
     newvalues(true, false)
     defaultto false
   end
@@ -83,7 +84,8 @@ Puppet::Type.newtype(:file_line) do
   end
 
   newparam(:after) do
-    desc 'An optional value used to specify the line after which we will add any new lines. (Existing lines are added in place)'
+    desc 'An optional value used to specify the line after which we will add any new lines. (Existing lines are added in place)' +
+         ' This is also takes a regex.'
   end
 
   newparam(:line) do
@@ -93,8 +95,8 @@ Puppet::Type.newtype(:file_line) do
   newparam(:path) do
     desc 'The file Puppet will ensure contains the line specified by the line parameter.'
     validate do |value|
-      unless (Puppet.features.posix? and value =~ /^\//) or (Puppet.features.microsoft_windows? and (value =~ /^.:\// or value =~ /^\/\/[^\/]+\/[^\/]+/))
-        raise(Puppet::Error, "File paths must be fully qualified, not '#{value}'")
+      unless Puppet::Util.absolute_path?(value)
+        raise Puppet::Error, "File paths must be fully qualified, not '#{value}'"
       end
     end
   end
