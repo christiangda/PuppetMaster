@@ -39,7 +39,7 @@ echo '{ "node_group": "vagrant", "node_environment": "vagrant", "node_location":
 ################################################################################
 #
 puppet agent --enable
-puppet agent --test --server master.puppet.local --environment production --noop
+puppet agent --test --server ps.puppet.local --environment production --noop
 sleep 5
 
 ################################################################################
@@ -47,7 +47,7 @@ sleep 5
 cat << __EOF__ > /etc/puppetlabs/puppet/puppet.conf
 #
 [main]
-server = master.puppet.local
+server = ps.puppet.local
 environment = production
 
 [agent]

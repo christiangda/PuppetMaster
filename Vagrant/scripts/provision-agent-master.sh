@@ -8,4 +8,4 @@ echo '{ "node_group": "vagrant", "node_environment": "vagrant", "node_location":
 ################################################################################
 #
 puppet agent --enable
-puppet agent --test --server master.puppet.local --environment production --noop
+puppet agent --test --server ps.puppet.local --environment production --noop

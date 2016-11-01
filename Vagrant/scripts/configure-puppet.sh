@@ -19,11 +19,10 @@ rundir = /var/run/puppetlabs/puppetserver
 pidfile = /var/run/puppetlabs/puppetserver/puppetserver.pid
 codedir = /etc/puppetlabs/code
 
-certname = master.puppet.local
-server = master.puppet.local
-dns_alt_names = master,master.puppet.local
+certname = ps.puppet.local
+server = ps.puppet.local
+dns_alt_names = ps,ps.puppet.local
 environment = production
-runinterval = 1h
 
 report=true
 strict_environment_mode = true
@@ -31,8 +30,8 @@ strict_hostname_checking = true
 strict_variables = true
 
 [master]
-server = master.puppet.local
-dns_alt_names = master.puppet.local, master
+server = ps.puppet.local
+dns_alt_names = ps.puppet.local, master
 reports = store,puppetdb
 storeconfigs_backend = puppetdb
 storeconfigs = true
@@ -40,13 +39,15 @@ environment_timeout = unlimited
 
 [agent]
 usecacheonfailure = false
+runinterval = 1h
+
 __EOF__
 
 ################################################################################
 # file: puppetdb.conf
 cat << __EOF__ > $PUPPETDB_CONF
 [main]
-server_urls = https://master.puppet.local:8081
+server_urls = https://ps.puppet.local:8081
 __EOF__
 
 ################################################################################

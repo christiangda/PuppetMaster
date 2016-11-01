@@ -7,48 +7,48 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
 
   ##############################################################################
-  # PUPETMASTER CONFIG
+  # PUPPET SERVER CONFIG
   #
-  config.vm.define "master" do |master|
+  config.vm.define "ps" do |ps|
     # Vagrant box flavor and repo
-    # master.vm.box = "centos/7"
-    # master.vm.box_url = "https://atlas.hashicorp.com/centos/boxes/7"
-    master.vm.box = "bento/centos-7.2"
-    master.vm.box_url = "https://atlas.hashicorp.com/bento/boxes/centos-7.2"
+    # ps.vm.box = "centos/7"
+    # ps.vm.box_url = "https://atlas.hashicorp.com/centos/boxes/7"
+    ps.vm.box = "geerlingguy/centos7"
+    ps.vm.box_url = "https://atlas.hashicorp.com/geerlingguy/boxes/centos7"
 
-    master.vm.hostname =  "master.puppet.local"
-    master.vm.network "private_network", ip: "192.168.33.100"
+    ps.vm.hostname =  "ps.puppet.local"
+    ps.vm.network "private_network", ip: "192.168.33.100"
 
     # Map internal ports services
-    # puppetmaster dashboard
-    master.vm.network "forwarded_port", guest: 8080, host: 18080, host_ip: '127.0.0.1', auto_correct: true
+    # puppet server dashboard
+    ps.vm.network "forwarded_port", guest: 8080, host: 18080, host_ip: '127.0.0.1', auto_correct: true
     # CouchDB web interface
-    master.vm.network "forwarded_port", guest: 5984, host: 15984, host_ip: '127.0.0.1', auto_correct: true
+    ps.vm.network "forwarded_port", guest: 5984, host: 15984, host_ip: '127.0.0.1', auto_correct: true
 
     # mount folders
-    master.vm.synced_folder "../modules", "/etc/puppetlabs/code/environments/production/modules"
-    master.vm.synced_folder "../manifests", "/etc/puppetlabs/code/environments/production/manifests"
-    master.vm.synced_folder "../hieradata", "/etc/puppetlabs/code/environments/production/hieradata"
+    ps.vm.synced_folder "../modules", "/etc/puppetlabs/code/environments/production/modules"
+    ps.vm.synced_folder "../manifests", "/etc/puppetlabs/code/environments/production/manifests"
+    ps.vm.synced_folder "../hieradata", "/etc/puppetlabs/code/environments/production/hieradata"
 
-    master.vm.provider "virtualbox" do |v|
-      v.name    = "master.puppet.local"
+    ps.vm.provider "virtualbox" do |v|
+      v.name    = "ps.puppet.local"
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
       v.memory = "3072"
       v.cpus = 2
     end
 
-    # Puppet master provision script
-    master.vm.provision "shell", path: "./scripts/bootstrap-redhat-family.sh"
-    master.vm.provision "shell", path: "./scripts/provision-postgresql.sh"
-    master.vm.provision "shell", path: "./scripts/provision-couchdb.sh"
-    master.vm.provision "shell", path: "./scripts/provision-puppetserver.sh"
-    master.vm.provision "shell", path: "./scripts/provision-puppetdb.sh"
-    master.vm.provision "shell", path: "./scripts/configure-puppet.sh"
-    master.vm.provision "shell", path: "./scripts/configure-puppetdb-ssl.sh"
-    master.vm.provision "shell", path: "./scripts/enable-manifest-for-vagrant-nodes.sh"
-    #master.vm.provision "shell", path: "./scripts/provision-vbox-additions.sh"
-    master.vm.provision "shell", path: "./scripts/provision-agent-master.sh"
+    # Puppet server provision script
+    ps.vm.provision "shell", path: "./scripts/bootstrap-redhat-family.sh"
+    ps.vm.provision "shell", path: "./scripts/provision-postgresql.sh"
+    ps.vm.provision "shell", path: "./scripts/provision-couchdb.sh"
+    ps.vm.provision "shell", path: "./scripts/provision-puppetserver.sh"
+    ps.vm.provision "shell", path: "./scripts/provision-puppetdb.sh"
+    ps.vm.provision "shell", path: "./scripts/configure-puppet.sh"
+    ps.vm.provision "shell", path: "./scripts/configure-puppetdb-ssl.sh"
+    ps.vm.provision "shell", path: "./scripts/enable-manifest-for-vagrant-nodes.sh"
+    #ps.vm.provision "shell", path: "./scripts/provision-vbox-additions.sh"
+    ps.vm.provision "shell", path: "./scripts/provision-agent-master.sh"
   end
 
   ##############################################################################

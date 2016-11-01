@@ -21,7 +21,7 @@ if [ ! -f $VAGRANT_MANIFEST ]; then
 cat << __EOF__ > $VAGRANT_MANIFEST
 ################################################################################
 # NODES DEFINITION
-node 'master.puppet.local' {
+node 'ps.puppet.local' {
   include profile::common
 
 }
