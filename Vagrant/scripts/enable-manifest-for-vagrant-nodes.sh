@@ -26,12 +26,12 @@ node 'ps.puppet.local' {
 
 }
 
-node 'agent-01.puppet.local' {
+node 'pa-01.puppet.local' {
   include profile::common
 
 }
 
-node 'agent-02.puppet.local' {
+node 'pa-02.puppet.local' {
   include profile::common
 
 }

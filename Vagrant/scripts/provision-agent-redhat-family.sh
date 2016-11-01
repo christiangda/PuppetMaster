@@ -2,7 +2,7 @@
 
 ################################################################################
 # Set the hostname
-hostnamectl set-hostname agent-01.puppet.local
+hostnamectl set-hostname pa-01.puppet.local
 
 ################################################################################
 # Install the puppet

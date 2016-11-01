@@ -2,7 +2,7 @@
 
 ################################################################################
 # Set the hostname
-hostnamectl set-hostname agent-02.puppet.local
+hostnamectl set-hostname pa-02.puppet.local
 
 ################################################################################
 # remove old puppet

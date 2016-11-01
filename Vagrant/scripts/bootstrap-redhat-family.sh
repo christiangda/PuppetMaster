@@ -32,8 +32,8 @@ cat << __EOF__ > /etc/hosts
 # MANAGED BY boostrap.sh script in Vagrant
 127.0.0.1         localhost
 192.168.33.100    ps.puppet.local master
-192.168.33.101    agent-01.puppet.local agent-01
-192.168.33.102    agent-02.puppet.local agent-02
+192.168.33.101    pa-01.puppet.local pa-01
+192.168.33.102    pa-02.puppet.local pa-02
 __EOF__
 
 ################################################################################
